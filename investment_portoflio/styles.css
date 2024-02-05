@@ -1,0 +1,113 @@
+/* Reset default margin and padding */
+body, table, th, td {
+    margin: 0;
+    padding: 0;
+}
+
+/* Set background and font styles */
+body {
+    background-color: #fff; /* White background color */
+    font-family: monospace;
+    color: #000000; /* Black text color */
+    display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-size: 8px;
+}
+
+/* Create a container for the table */
+.container {
+    max-width: 100%;
+    margin: 10px;
+    overflow-x: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Style the table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-color: #5977c9; /* Black background for the table */
+    border: 1px solid #333; /* Dark gray border */
+    max-width: 800px; /* Adjust the max-width as needed */
+}
+
+/* Style table headers */
+th {
+    background-color: #2a52be; /* Blue header background */
+    color: white; /* White text color */
+    font-weight: bold; /* Bold header text */
+    text-align: center;
+    padding: 10px;
+}
+
+/* Style table header cells */
+td, th {
+    border: 1px solid #333; /* Dark gray border */
+    padding: 8px;
+    text-align: center;
+}
+
+/* Style table data cells */
+td {
+    background-color: #ffffff; /* Black background for data cells */
+}
+
+/* Style input elements */
+input[type="text"],
+input[type="number"] {
+    width: 100%; /* Take up 100% width on mobile */
+    text-align: center;
+    padding: 2px;
+    border: 1px solid #333; /* Dark gray border */
+    border-radius: 4px;
+    background-color: #ffffff; /* Black background for input fields */
+    color: #333; /* White text color for input fields */
+    font-family: monospace;
+    font-size: 8px;
+}
+
+
+
+/* Style the "Add" button */
+button {
+    background-color: #2a52be; /* Blue button background */
+    color: white; /* White text color */
+    border: none;
+    padding: 10px 15px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* Hover effect for the "Add" button */
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Style the footer */
+footer {
+    background-color: #007bff; /* Blue footer background */
+    color: white; /* White text color */
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    margin-top: 10px; /* Decrease margin for the footer */
+}
+
+
+
+/* Add media query for mobile devices */
+@media screen and (max-width: 767px) {
+    table {
+        font-size: 14px; /* Adjust font size for smaller screens */
+    }
+    .container {
+        margin: 10px auto; /* Center the container on smaller screens */
+    }
+}
+

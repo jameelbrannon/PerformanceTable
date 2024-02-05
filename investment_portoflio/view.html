@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Calculator Table</title>
+</head>
+<body>
+    <table id="calculator">
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th>Position</th>
+                <th>Price</th>
+                <th>Avg Cost</th>
+                <th>Cost Basis</th>
+                <th>Current Basis</th>
+                <th>P&L</th>
+                <th>Absolute Basis</th>
+                <th>Date Entered</th>
+                <th>Days Held</th>
+                <th>% Gain</th>
+                <th>Annualized Return</th>
+            </tr>
+        </thead>
+        <tbody id="calculatorBody">
+            <tr id="templateRow" style="display:none;">
+                <td><input type="text" class="ticker" oninput="calculate(this)"></td>
+                <td><input type="number" class="position" oninput="calculate(this)"></td>
+                <td><input type="number" class="price" oninput="calculate(this)"></td>
+                <td><input type="number" class="avgCostPerShare" oninput="calculate(this)"></td>
+                <td><span class="costBasis"></span></td>
+                <td><span class="currentBasis">0</span></td>
+                <td><span class="pandL">0</span></td>
+                <td><span class="absoluteBasis">0</span></td>
+                <td>
+                    <input type="text" class="dateEntered" oninput="calculate(this)" placeholder="YYYY/MM/DD"
+                           pattern="\d{4}/\d{2}/\d{2}" title="Please enter a valid date in YYYY/MM/DD format">
+                </td>
+                <td><span class="daysHeld">0</span></td>
+                <td><span class="percentGain">0</span></td>
+                <td><span class="annualizedReturn">0</span></td>
+            </tr>
+            <!-- Existing row (you can keep this if you want to start with one row) -->
+            <tr>
+                <td><input type="text" class="ticker" oninput="calculate(this)"></td>
+                <td><input type="number" class="position" oninput="calculate(this)"></td>
+                <td>
+                    <input type="number" class="price" oninput="calculate(this)">
+                </td>
+                <td><input type="number" class="avgCostPerShare" oninput="calculate(this)"></td>
+                <td><span class="costBasis">0</span></td>
+                <td><span class="currentBasis">0</span></td>
+                <td>
+                    <span class="pandL">0</span>
+               
+                </td>
+                <td><span class="absoluteBasis">0</span></td>
+                <td><input type="text" class="dateEntered" oninput="calculate(this)" placeholder="YYYY/MM/DD"
+                           pattern="\d{4}/\d{2}/\d{2}" title="Please enter a valid date in YYYY/MM/DD format"></td>
+                <td><span class="daysHeld">0</span></td>
+                <td><span class="percentGain">0</span></td>
+                <td><span class="annualizedReturn">0</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button onclick="addRow()">+</button>
+
+    
+    <script src="script.js"></script>
+
+    <!-- Include external XLSX library and export functionality here -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js" ></script>
+    <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js" ></script>
+    <!-- Include jsPDF-AutoTable plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.15/jspdf.plugin.autotable.min.js" ></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var exportButton = document.createElement('button');
+        exportButton.textContent = 'Export to XLSX';
+        exportButton.id = 'exportButton';
+
+        exportButton.addEventListener('click', function () {
+            // Get the table element by its ID
+            var table = document.getElementById('calculator');
+
+            // Create a new Workbook
+            var wb = XLSX.utils.table_to_book(table);
+
+            // Generate the XLSX file and save it
+            XLSX.writeFile(wb, 'exported_table.xlsx');
+        });
+
+        // Append the export button at the bottom of the body
+        document.body.appendChild(exportButton);
+         // Apply custom CSS styles to the export button
+        exportButton.style.position = 'fixed';
+        exportButton.style.top = '10px';
+        exportButton.style.right = '10px';
+        exportButton.style.fontSize = '8px'; // Adjust font size
+        exportButton.style.fontFamily = 'monospace'; // Change font family
+        exportButton.style.padding = '5px 10px'; // Add padding to make it smaller
+
+        // Create a function to export the table as a PDF
+    function exportToPDF() {
+        var table = document.getElementById('calculator');
+
+        // Initialize jsPDF
+        var doc = new jsPDF();
+
+        // Add a title to the PDF
+        doc.text('Exported Table as PDF', 10, 10);
+
+        // Define the columns and rows
+        var columns = [];
+        var rows = [];
+
+        // Get table headers
+        var headers = table.querySelectorAll('thead th');
+        headers.forEach(function(header) {
+            columns.push(header.innerText);
+        });
+
+        // Get table rows
+        var tableRows = table.querySelectorAll('tbody tr');
+        tableRows.forEach(function(row) {
+            var rowData = [];
+            row.querySelectorAll('td').forEach(function(cell) {
+                rowData.push(cell.innerText);
+            });
+            rows.push(rowData);
+        });
+
+        // Add the table as a JSON
+        var tableData = {
+            columns: columns,
+            rows: rows
+        };
+
+        // AutoTable plugin to generate the table from JSON
+        doc.autoTable({
+            head: [tableData.columns],
+            body: tableData.rows
+        });
+
+        // Save the PDF with a specific name
+        doc.save('exported_table.pdf');
+    }
+
+    // Create a button for exporting as PDF
+    var exportPDFButton = document.createElement('button');
+    exportPDFButton.textContent = 'Export to PDF';
+    exportPDFButton.id = 'exportPDFButton';
+
+    // Add a click event listener to the new button
+    exportPDFButton.addEventListener('click', exportToPDF);
+
+    // Append the export PDF button at the bottom of the body
+    document.body.appendChild(exportPDFButton);
+
+    // Apply custom CSS styles to the export PDF button (optional)
+    exportPDFButton.style.position = 'fixed';
+    exportPDFButton.style.top = '30px';
+    exportPDFButton.style.right = '10px'; // Adjust the position as needed
+    exportPDFButton.style.fontSize = '8px'; // Adjust font size
+    exportPDFButton.style.fontFamily = 'monospace'; // Change font family
+    exportPDFButton.style.padding = '5px 10px'; // Add padding to make it smaller
+});
+</script>
